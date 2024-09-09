@@ -16,8 +16,8 @@ class Order(BaseModel):
         verbose_name="주문 상태",
         choices=[
             ("pending", "주문 완료"),
-            ("deposited", "입금 완료")("shipped", "배송 중"),
-            ("delivered", "배송 완료"),
+            ("deposited", "입금 완료"),
+            ("shipped", "발송 완료"),
             ("received", "수령 완료"),
         ],
     )
