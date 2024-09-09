@@ -9,6 +9,10 @@ class Product(BaseModel):
         max_length=100,
         verbose_name="상품명",
     )
+    manager = models.CharField(
+        max_length=100,
+        verbose_name="관리자",
+    )
     purity = models.FloatField(
         verbose_name="순도",
     )

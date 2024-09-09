@@ -8,9 +8,15 @@ class Order(BaseModel):
     """Order Model Definition"""
 
     order_number = models.CharField(
-        max_length=20, unique=True, editable=False, verbose_name="주문번호"
+        max_length=20,
+        unique=True,
+        editable=False,
+        verbose_name="주문번호",
     )
-    customer = models.CharField(max_length=100, verbose_name="주문자")
+    customer = models.CharField(
+        max_length=100,
+        verbose_name="주문자",
+    )
     status = models.CharField(
         max_length=20,
         verbose_name="주문 상태",
