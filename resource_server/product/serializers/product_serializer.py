@@ -16,6 +16,7 @@ class ProductSerializer(ModelSerializer):
             "crr_stock_per_gram",
             "created_at",
             "updated_at",
+            "deleted_at",
         ]
 
         read_only_fields = [
