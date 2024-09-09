@@ -15,3 +15,8 @@ class BaseModel(models.Model):
         verbose_name="수정된 일시",
         auto_now=True,
     )
+    deleted_at = models.DateTimeField(
+        null=True,
+        blank=True,
+        verbose_name="삭제 일시",
+    )

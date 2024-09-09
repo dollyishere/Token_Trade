@@ -25,12 +25,14 @@ class OrderAdmin(admin.ModelAdmin):
         "status",
         "created_at",
         "updated_at",
+        "deleted_at",
     )
     ordering = ("-created_at",)
     readonly_fields = (
         "order_number",
         "created_at",
         "updated_at",
+        "deleted_at",
     )
 
     fieldsets = (
@@ -53,6 +55,7 @@ class OrderAdmin(admin.ModelAdmin):
                 "fields": (
                     "created_at",
                     "updated_at",
+                    "deleted_at",
                 ),
             },
         ),

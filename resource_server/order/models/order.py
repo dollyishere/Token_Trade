@@ -25,6 +25,7 @@ class Order(BaseModel):
             ("deposited", "입금 완료"),
             ("shipped", "발송 완료"),
             ("received", "수령 완료"),
+            ("cancled", "취소됨"),
         ],
     )
     quantity = models.PositiveIntegerField(

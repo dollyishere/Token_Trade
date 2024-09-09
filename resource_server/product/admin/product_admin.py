@@ -21,14 +21,16 @@ class ProductAdmin(admin.ModelAdmin):
         "updated_at",
     )
     list_filter = (
+        "manager",
         "created_at",
         "updated_at",
-        "manager",
+        "deleted_at",
     )
     ordering = ("id",)
     readonly_fields = (
         "created_at",
         "updated_at",
+        "deleted_at",
     )
     fieldsets = (
         (
@@ -49,6 +51,7 @@ class ProductAdmin(admin.ModelAdmin):
                 "fields": (
                     "created_at",
                     "updated_at",
+                    "deleted_at",
                 ),
             },
         ),
