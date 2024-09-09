@@ -25,6 +25,7 @@ class OrderDetailSerializer(ModelSerializer):
         ]
         read_only_fields = [
             "id",
+            "order_number",
             "created_at",
             "updated_at",
         ]
