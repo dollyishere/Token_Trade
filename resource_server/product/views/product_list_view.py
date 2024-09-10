@@ -1,9 +1,13 @@
 from rest_framework import status
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
+
 from drf_yasg.utils import swagger_auto_schema
+
 from product.models import Product
 from product.serializers import ProductSerializer
+from product.permissions import IsManagerForProduct
 
 
 class ProductListAPIView(APIView):
@@ -13,7 +17,7 @@ class ProductListAPIView(APIView):
     이 API는 Product(Gold) 리스트에 대한 CR를 수행합니다.
     """
 
-    # permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated, IsManagerForProduct]
     serializer_class = ProductSerializer
 
     @swagger_auto_schema(

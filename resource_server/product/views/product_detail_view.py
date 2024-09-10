@@ -1,11 +1,14 @@
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+
 from drf_yasg.utils import swagger_auto_schema
 from django.utils import timezone
 from django.http import Http404
+
 from product.models import Product
 from product.serializers import ProductSerializer
+from product.permissions import IsManagerForProduct
 
 
 class ProductDetailAPIView(APIView):
@@ -16,6 +19,7 @@ class ProductDetailAPIView(APIView):
     """
 
     serializer_class = ProductSerializer
+    # permission_classes = [IsAuthenticated, IsManagerForProduct]
 
     def get_object(self, pk):
         """
