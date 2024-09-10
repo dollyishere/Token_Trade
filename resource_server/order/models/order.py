@@ -25,10 +25,12 @@ class Order(BaseModel):
             ("deposited", "입금 완료"),
             ("shipped", "발송 완료"),
             ("received", "수령 완료"),
-            ("cancled", "취소됨"),
+            ("canceled", "취소됨"),
         ],
     )
-    quantity = models.PositiveIntegerField(
+    quantity = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
         verbose_name="주문 수량",
     )
     shipping_address = models.CharField(

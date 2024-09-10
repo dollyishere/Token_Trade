@@ -57,4 +57,5 @@ urlpatterns = [
         name="schema-redoc",
     ),
     path("products/", include("product.urls")),
+    path("orders/", include("order.urls")),
 ]
