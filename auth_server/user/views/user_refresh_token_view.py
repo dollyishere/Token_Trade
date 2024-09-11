@@ -24,9 +24,10 @@ class RefreshTokenAPIView(APIView):
 
     def post(self, request):
         try:
-            refresh_token = request.data.get("refresh_token")
-
-            if not refresh_token:
+            authorization_header = request.headers.get("Authorization")
+            if not authorization_header or not authorization_header.startswith(
+                "Bearer Token"
+            ):
                 return Response(
                     {
                         "success": False,
@@ -35,11 +36,13 @@ class RefreshTokenAPIView(APIView):
                     status=status.HTTP_400_BAD_REQUEST,
                 )
 
+            token = authorization_header.split(" ")[2]
+
             try:
                 is_manager = False
 
                 # Refresh Token 검증
-                payload = jwt.decode(refresh_token, SECRET_KEY, algorithms=[ALGORITHM])
+                payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
                 username = payload.get("username")
                 role = payload.get("role", "None")
 

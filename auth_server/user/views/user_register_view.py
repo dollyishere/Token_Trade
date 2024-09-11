@@ -4,6 +4,9 @@ from rest_framework import status
 from user.serializers import UserRegisterSerializer
 from user.auth import create_access_token, create_refresh_token
 
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
+
 
 class UserRegisterAPIView(APIView):
     """
@@ -11,6 +14,52 @@ class UserRegisterAPIView(APIView):
     회원가입 및 JWT 토큰 발급
     """
 
+    @swagger_auto_schema(
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                "username": openapi.Schema(type=openapi.TYPE_STRING),
+                "password": openapi.Schema(type=openapi.TYPE_STRING),
+                "password_confirm": openapi.Schema(type=openapi.TYPE_STRING),
+            },
+            required=["username", "password", "password_confirm"],
+        ),
+        responses={
+            201: openapi.Response(
+                description="회원가입 성공",
+                examples={
+                    "application/json": {
+                        "success": True,
+                        "message": "회원가입에 성공했습니다.",
+                        "data": {
+                            "access_token": "string",
+                            "refresh_token": "string",
+                            "username": "string",
+                            "is_manager": True,
+                        },
+                    }
+                },
+            ),
+            400: openapi.Response(
+                description="잘못된 요청",
+                examples={
+                    "application/json": {
+                        "success": False,
+                        "message": "비밀번호가 일치하지 않습니다.",
+                    }
+                },
+            ),
+            500: openapi.Response(
+                description="서버 오류",
+                examples={
+                    "application/json": {
+                        "success": False,
+                        "message": "오류가 발생했습니다.",
+                    }
+                },
+            ),
+        },
+    )
     def post(self, request):
         # 회원가입 serializer 사용
         try:

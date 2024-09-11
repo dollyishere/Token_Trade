@@ -4,13 +4,14 @@ from rest_framework.exceptions import ValidationError
 
 
 class UserRegisterSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(
+        required=True,
+    )
     password = serializers.CharField(
-        write_only=True,  # 클라이언트 측으로 반환되지 않게 방지
         required=True,
         style={"input_type": "password"},
     )
     password_confirm = serializers.CharField(
-        write_only=True,
         required=True,
         style={"input_type": "password"},
     )

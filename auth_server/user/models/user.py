@@ -41,6 +41,11 @@ class User(AbstractBaseUser, PermissionsMixin):
         unique=True,
         verbose_name="유저 식별 아이디",
     )
+    password = models.CharField(
+        max_length=255,
+        null=False,
+        verbose_name="비밀번호",
+    )
     is_active = models.BooleanField(
         default=True,
     )

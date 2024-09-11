@@ -25,16 +25,20 @@ class UserLogoutAPIView(APIView):
 
     def post(self, request):
         try:
-            token = request.data.get("token")
-
-            if not token:
+            authorization_header = request.headers.get("Authorization")
+            print(authorization_header)
+            if not authorization_header or not authorization_header.startswith(
+                "Bearer Token"
+            ):
                 return Response(
                     {
                         "success": False,
-                        "message": "토큰이 필요합니다.",
+                        "message": "Refresh token이 필요합니다.",
                     },
                     status=status.HTTP_400_BAD_REQUEST,
                 )
+
+            token = authorization_header.split(" ")[2]
 
             try:
                 # 토큰을 디코딩하여 유효성 검증

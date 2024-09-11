@@ -23,13 +23,20 @@ class VerifyUserAPIView(APIView):
 
     def post(self, request):
         try:
-            token = request.data.get("token")
-
-            if not token:
+            authorization_header = request.headers.get("Authorization")
+            print(authorization_header)
+            if not authorization_header or not authorization_header.startswith(
+                "Bearer Token"
+            ):
                 return Response(
-                    {"error": "Token is required"},
+                    {
+                        "success": False,
+                        "message": "token이 필요합니다.",
+                    },
                     status=status.HTTP_400_BAD_REQUEST,
                 )
+
+            token = authorization_header.split(" ")[2]
 
             try:
                 payload = jwt.decode(
