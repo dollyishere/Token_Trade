@@ -6,8 +6,8 @@ import pytz
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework_simplejwt.tokens import OutstandingToken, BlacklistedToken
-from rest_framework_simplejwt.exceptions import TokenError
+
+from user.auth import create_access_token
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,39 +20,42 @@ ALGORITHM = "HS256"
 KST = pytz.timezone("Asia/Seoul")
 
 
-class UserLogoutAPIView(APIView):
-    """로그아웃 api view"""
+class RefreshTokenAPIView(APIView):
 
     def post(self, request):
         try:
-            token = request.data.get("token")
+            refresh_token = request.data.get("refresh_token")
 
-            if not token:
+            if not refresh_token:
                 return Response(
                     {
                         "success": False,
-                        "message": "토큰이 필요합니다.",
+                        "message": "Refresh token이 필요합니다.",
                     },
                     status=status.HTTP_400_BAD_REQUEST,
                 )
 
             try:
-                # 토큰을 디코딩하여 유효성 검증
-                payload = jwt.decode(
-                    token,
-                    SECRET_KEY,
-                    algorithms=[ALGORITHM],
-                )
-                print(f"{payload} is success")
+                is_manager = False
 
-                # 현재 토큰 블랙리스트에 추가해서 추가 사용 방지
-                outstanding_token = OutstandingToken.objects.get(token=token)
-                BlacklistedToken.objects.create(token=outstanding_token)
+                # Refresh Token 검증
+                payload = jwt.decode(refresh_token, SECRET_KEY, algorithms=[ALGORITHM])
+                username = payload.get("username")
+                role = payload.get("role", "None")
+
+                if role == "manager":
+                    is_manager = True
+
+                # 새로운 Access Token 발급
+                new_access_token = create_access_token(
+                    username,
+                    is_manager,
+                )
 
                 return Response(
                     {
                         "success": True,
-                        "message": "로그아웃에 성공했습니다.",
+                        "access_token": new_access_token,
                     },
                     status=status.HTTP_200_OK,
                 )
@@ -61,7 +64,7 @@ class UserLogoutAPIView(APIView):
                 return Response(
                     {
                         "success": False,
-                        "message": "토큰이 만료됐습니다.",
+                        "message": "Refresh token이 만료됐습니다.",
                     },
                     status=status.HTTP_401_UNAUTHORIZED,
                 )
@@ -70,18 +73,9 @@ class UserLogoutAPIView(APIView):
                 return Response(
                     {
                         "success": False,
-                        "message": "인가되지 않는 토큰입니다.",
+                        "message": "Refresh token이 인증에 실패했습니다.",
                     },
                     status=status.HTTP_401_UNAUTHORIZED,
-                )
-
-            except TokenError:
-                return Response(
-                    {
-                        "success": False,
-                        "message": "토큰에 에러가 발생했습니다.",
-                    },
-                    status=status.HTTP_400_BAD_REQUEST,
                 )
         except Exception as e:
             print(f"An error occurred: {e}")

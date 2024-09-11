@@ -1,0 +1,5 @@
+from user.views.user_register_view import UserRegisterAPIView
+from user.views.user_login_view import UserLoginAPIView
+from user.views.user_logout_view import UserLogoutAPIView
+from user.views.user_verify_view import VerifyUserAPIView
+from user.views.user_refresh_token_view import RefreshTokenAPIView

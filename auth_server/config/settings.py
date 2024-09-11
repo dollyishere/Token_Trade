@@ -51,6 +51,7 @@ PROJECT_APPS = []
 # Apps from external packages
 PACKAGE_APPS = [
     "rest_framework",
+    "rest_framework_simplejwt",
     "drf_yasg",
 ]
 
