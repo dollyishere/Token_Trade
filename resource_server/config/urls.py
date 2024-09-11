@@ -23,7 +23,7 @@ from drf_yasg import openapi
 
 schema_view = get_schema_view(
     openapi.Info(
-        title="Gold Rush API",
+        title="Gold Rush RESOURCE API",
         default_version="v1",
         description="gold-rush-resource_server",
         terms_of_service="https://www.google.com/policies/terms/",

@@ -15,6 +15,7 @@ gunicorn = "*"
 psycopg2-binary = "*"
 whitenoise = "*"
 djangorestframework-simplejwt = "*"
+mysqlclient = "*"
 
 [dev-packages]
 flake8 = "==7.1.0"
