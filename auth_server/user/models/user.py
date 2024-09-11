@@ -41,11 +41,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         unique=True,
         verbose_name="유저 식별 아이디",
     )
-    email = models.EmailField(
-        unique=True,
-        null=True,
-        blank=True,
-    )
     is_active = models.BooleanField(
         default=True,
     )
@@ -62,7 +57,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()  # 커스텀 매니저로 유저 생성
 
     USERNAME_FIELD = "username"  # 로그인 시 사용할 필드
-    REQUIRED_FIELDS = ["email"]  # 슈퍼 유저 생성 시 추가로 요구되는 필드
 
     def __str(self):
         return self.username
