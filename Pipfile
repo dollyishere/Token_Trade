@@ -14,6 +14,7 @@ uvicorn = "*"
 gunicorn = "*"
 psycopg2-binary = "*"
 whitenoise = "*"
+djangorestframework-simplejwt = "*"
 
 [dev-packages]
 flake8 = "==7.1.0"

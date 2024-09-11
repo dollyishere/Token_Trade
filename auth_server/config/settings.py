@@ -46,11 +46,14 @@ DJANGO_APPS = [
 ]
 
 # Apps defined within the project
-PROJECT_APPS = []
+PROJECT_APPS = [
+    "user",
+]
 
 # Apps from external packages
 PACKAGE_APPS = [
     "rest_framework",
+    "rest_framework_simplejwt",
     "drf_yasg",
 ]
 
@@ -151,11 +154,26 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# Auth
+# # Auth
 AUTH_USER_MODEL = "user.User"
 
-REST_FRAMEWORK = {
-    "DEFAULT_AUTHENTICATION_CLASSES": [
-        "config.authentication.JWTAuthentication",
-    ]
+# REST_FRAMEWORK = {
+#     "DEFAULT_AUTHENTICATION_CLASSES": [
+#         "config.authentication.JWTAuthentication",
+#     ]
+# }
+
+SIMPLE_JWT = {
+    "BLACKLIST_AFTER_ROTATION": True,  # 토큰 회전 후 블랙리스트에 추가
+    "UPDATE_LAST_LOGIN": True,
+}
+
+# swagger settings
+SWAGGER_SETTINGS = {
+    "DEFAULT_INFO": "obab.urls.api_info",
+    "USE_SESSION_AUTH": False,
+    "VALIDATOR_URL": None,
+    "SECURITY_DEFINITIONS": {
+        "Bearer": {"type": "apiKey", "name": "Authorization", "in": "header"}
+    },
 }
