@@ -26,7 +26,7 @@ class RefreshTokenAPIView(APIView):
         try:
             authorization_header = request.headers.get("Authorization")
             if not authorization_header or not authorization_header.startswith(
-                "Bearer Token"
+                "Bearer"
             ):
                 return Response(
                     {
@@ -36,7 +36,7 @@ class RefreshTokenAPIView(APIView):
                     status=status.HTTP_400_BAD_REQUEST,
                 )
 
-            token = authorization_header.split(" ")[2]
+            token = authorization_header.split(" ")[1]
 
             try:
                 is_manager = False

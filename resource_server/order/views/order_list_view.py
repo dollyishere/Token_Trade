@@ -1,54 +1,58 @@
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from drf_yasg.utils import swagger_auto_schema
 
-from config.pagination import CustomPagination
-
 from order.models import Order
 from order.serializers import OrderListSerializer, OrderDetailSerializer
 from order.permissions import IsManagerOrCustomerForOrder
+from config.pagination import CustomPagination
 
 
 class OrderListAPIView(APIView):
     """
-    주문 리스트 api View
+    주문 리스트 API View
     """
 
-    # permission_classes = [IsAuthenticated, IsManagerOrCustomerForOrder]
+    permission_classes = [IsAuthenticated, IsManagerOrCustomerForOrder]
     serializer_class = OrderListSerializer
     pagination_class = CustomPagination
 
+    def get_serializer(self, *args, **kwargs):
+        return self.serializer_class(*args, **kwargs)
+
     @swagger_auto_schema(
         operation_summary="주문 리스트 조회 API",
-        request_body=OrderDetailSerializer,
         responses={
-            status.HTTP_200_OK: OrderDetailSerializer,
+            status.HTTP_200_OK: OrderListSerializer(many=True),
             status.HTTP_400_BAD_REQUEST: None,
         },
     )
-    def list(self, request, *args, **kwargs):
+    def get(self, request):
         """
         GET : /orders
 
         주문 리스트를 불러옵니다.
         """
         try:
-            queryset = self.filter_queryset(self.get_queryset())
-            page = self.paginate_queryset(queryset)
+            queryset = Order.objects.all().order_by("-created_at")
 
+            # 페이지네이션 처리
+            paginator = self.pagination_class()
+            page = paginator.paginate_queryset(queryset, request)
             if page is not None:
                 serializer = self.get_serializer(page, many=True)
-                return self.get_paginated_response(
+                return paginator.get_paginated_response(
                     {
                         "success": True,
                         "message": "주문 리스트 조회에 성공했습니다.",
                         "data": serializer.data,
-                    },
-                    status=status.HTTP_200_OK,
+                    }
                 )
 
+            # 페이지네이션이 필요 없는 경우
             serializer = self.get_serializer(queryset, many=True)
             return Response(
                 {
@@ -83,8 +87,22 @@ class OrderListAPIView(APIView):
             serializer = OrderDetailSerializer(data=request.data)
             if serializer.is_valid():
                 serializer.save()
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                return Response(
+                    {
+                        "success": True,
+                        "message": "주문이 성공적으로 등록되었습니다.",
+                        "data": serializer.data,
+                    },
+                    status=status.HTTP_201_CREATED,
+                )
+            return Response(
+                {
+                    "success": False,
+                    "message": "주문 등록 실패",
+                    "errors": serializer.errors,
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
         except Exception as e:
             print(f"An error occurred: {e}")
             return Response(

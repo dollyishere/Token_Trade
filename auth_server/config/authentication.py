@@ -1,8 +1,20 @@
+import environ
+from pathlib import Path
+import jwt
+
 from django.conf import settings
 from rest_framework.authentication import BaseAuthentication
 from rest_framework.exceptions import AuthenticationFailed
 from user.models import User
-import jwt
+
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+env = environ.Env()
+env.read_env(f"{BASE_DIR}/.env")
+
+SECRET_KEY = env("AUTH_SERVER_SECRET_KEY")
+ALGORITHM = "HS256"
 
 
 class JWTAuthentication(BaseAuthentication):
@@ -13,8 +25,8 @@ class JWTAuthentication(BaseAuthentication):
             return None
         decoded = jwt.decode(
             token,
-            settings.SECRET_KEY,
-            algorithms=["HS256"],
+            SECRET_KEY,
+            algorithms=[ALGORITHM],
         )
         pk = decoded.get("pk")
         if not pk:
