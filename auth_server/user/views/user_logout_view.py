@@ -28,7 +28,7 @@ class UserLogoutAPIView(APIView):
             authorization_header = request.headers.get("Authorization")
             print(authorization_header)
             if not authorization_header or not authorization_header.startswith(
-                "Bearer Token"
+                "Bearer "
             ):
                 return Response(
                     {
@@ -38,7 +38,7 @@ class UserLogoutAPIView(APIView):
                     status=status.HTTP_400_BAD_REQUEST,
                 )
 
-            token = authorization_header.split(" ")[2]
+            token = authorization_header.split(" ")[1]
 
             try:
                 # 토큰을 디코딩하여 유효성 검증

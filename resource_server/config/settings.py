@@ -157,8 +157,20 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # Auth
 # AUTH_USER_MODEL = "user.User"
 
-# REST_FRAMEWORK = {
-#     "DEFAULT_AUTHENTICATION_CLASSES": [
-#         "config.authentication.JWTAuthentication",
-#     ]
-# }
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "config.authentication.JWTAuthentication",
+    ]
+}
+
+# swagger settings
+SWAGGER_SETTINGS = {
+    "DEFAULT_INFO": "obab.urls.api_info",
+    "USE_SESSION_AUTH": False,
+    "VALIDATOR_URL": None,
+    "SECURITY_DEFINITIONS": {
+        "Bearer": {"type": "apiKey", "name": "Authorization", "in": "header"}
+    },
+}
+
+AUTH_SERVER_BASE_URL = "http://127.0.0.1:8000/"
